@@ -9,7 +9,15 @@ export function PasswordInput({ className, ...props }: Omit<React.ComponentProps
   const [visible, setVisible] = React.useState(false);
   return (
     <div className="relative">
-      <Input type={visible ? "text" : "password"} className={cn("pr-12", className)} {...props} />
+      {/* Sin mayúscula/autocorrección automáticas: en iOS, al mostrar la contraseña el campo pasa a texto. */}
+      <Input
+        type={visible ? "text" : "password"}
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
+        className={cn("pr-12", className)}
+        {...props}
+      />
       <button
         type="button"
         onClick={() => setVisible((v) => !v)}

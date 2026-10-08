@@ -174,7 +174,7 @@ export function RegistroForm({ rol }: { rol: Rol }) {
           <Input id="nombre" autoComplete="name" placeholder="Ej. María López" value={values.nombre} onChange={set("nombre")} onBlur={blur("nombre")} {...a11y("nombre")} />
         </Field>
         <Field id="email" label="Correo electrónico" error={errors.email}>
-          <Input id="email" type="email" inputMode="email" autoComplete="email" placeholder="tu@correo.com" value={values.email} onChange={set("email")} onBlur={blur("email")} {...a11y("email")} />
+          <Input id="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} placeholder="tu@correo.com" value={values.email} onChange={set("email")} onBlur={blur("email")} {...a11y("email")} />
         </Field>
         <Field id="password" label="Contraseña" hint="Mínimo 8 caracteres." error={errors.password}>
           <PasswordInput id="password" autoComplete="new-password" placeholder="Crea una contraseña" value={values.password} onChange={set("password")} onBlur={blur("password")} {...a11y("password")} />

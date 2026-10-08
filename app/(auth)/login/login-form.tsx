@@ -103,6 +103,9 @@ export function LoginForm({
             type="email"
             inputMode="email"
             autoComplete="email"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             placeholder="tu@correo.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
