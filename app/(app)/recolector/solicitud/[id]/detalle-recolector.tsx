@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, ClipboardList, Loader2, MapPin, MessageSquareText, Phone, ShieldCheck } from "lucide-react";
+import { CheckCircle2, ClipboardList, Info as InfoIcon, Loader2, MapPin, MessageSquareText, Phone, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { LitrosInput } from "@/components/litros-input";
 import { PageHeader } from "@/components/page-header";
@@ -25,6 +25,7 @@ import { parseLitros } from "@/lib/validation";
 export function DetalleRecolector({ initial }: { initial: SolicitudEstado }) {
   const { s, refetch } = useSolicitudLive(initial, { toasts: false });
   const recolectada = Boolean(s.confirmacion_id);
+  const [aviso, setAviso] = useState<string | null>(null);
 
   return (
     <div className="animate-fade-in">
@@ -58,6 +59,11 @@ export function DetalleRecolector({ initial }: { initial: SolicitudEstado }) {
         <div className="flex flex-col gap-4">
           {recolectada ? (
             <>
+              {aviso && (
+                <p role="status" className="flex items-start gap-2 rounded-xl bg-warning-soft p-3 text-sm text-warning">
+                  <InfoIcon className="mt-0.5 size-4 shrink-0" aria-hidden /> {aviso}
+                </p>
+              )}
               <Comprobante s={s} />
               {pagoKind(s) !== "pendiente" && (
                 <Button asChild variant="outline">
@@ -66,7 +72,7 @@ export function DetalleRecolector({ initial }: { initial: SolicitudEstado }) {
               )}
             </>
           ) : (
-            <ConfirmarForm s={s} onConfirmed={refetch} />
+            <ConfirmarForm s={s} onConfirmed={refetch} onYaConfirmada={setAviso} />
           )}
         </div>
       </div>
@@ -75,7 +81,15 @@ export function DetalleRecolector({ initial }: { initial: SolicitudEstado }) {
   );
 }
 
-function ConfirmarForm({ s, onConfirmed }: { s: SolicitudEstado; onConfirmed: () => Promise<unknown> }) {
+function ConfirmarForm({
+  s,
+  onConfirmed,
+  onYaConfirmada,
+}: {
+  s: SolicitudEstado;
+  onConfirmed: () => Promise<unknown>;
+  onYaConfirmada: (mensaje: string) => void;
+}) {
   const [litros, setLitros] = useState(s.litros_estimados != null ? String(s.litros_estimados) : "");
   const [calidad, setCalidad] = useState(false);
   const [errors, setErrors] = useState<{ litros?: string | null; calidad?: string | null; form?: string | null }>({});
@@ -106,8 +120,11 @@ function ConfirmarForm({ s, onConfirmed }: { s: SolicitudEstado; onConfirmed: ()
       });
       toast.error(message);
       setLoading(false);
-      // Si ya estaba confirmada, mostramos el comprobante existente.
-      if (error.code === "23505") await onConfirmed();
+      // Si ya estaba confirmada, mostramos el comprobante existente con el aviso.
+      if (error.code === "23505") {
+        onYaConfirmada(message);
+        await onConfirmed();
+      }
       return;
     }
 
