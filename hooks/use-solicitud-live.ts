@@ -28,7 +28,9 @@ export function useSolicitudLive(initial: SolicitudEstado, { toasts = true }: { 
 
   const final = isFinal(s);
   useRealtimeRefetch(`solicitud-${id}`, [{ table: "confirmaciones", filter: `solicitud_id=eq.${id}` }], refetch, !final);
-  usePolling(refetch, final ? null : pagoKind(s) === "pendiente" ? 2000 : 3000);
+  const pagoEnProceso = pagoKind(s) === "pendiente";
+  // Si Make no respondiera, dejamos de consultar tras 60 s (el canal realtime sigue abierto).
+  usePolling(refetch, final ? null : pagoEnProceso ? 2000 : 3000, pagoEnProceso ? 60_000 : undefined);
   const rows = toasts ? [s] : [];
   useTransitionToasts(rows);
 

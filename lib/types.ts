@@ -23,6 +23,6 @@ export function safeNext(next: string | null | undefined): string | null {
   return next;
 }
 
-export function isUuid(value: string | null | undefined): value is string {
+export function isUuid(value: string | null | undefined): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value ?? "");
 }
