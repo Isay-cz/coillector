@@ -17,3 +17,13 @@ export function RelativeTime({ date, className }: { date: string | null | undefi
     </time>
   );
 }
+
+/** Fecha absoluta en hora de CDMX. El formato de Intl puede variar entre Node y el navegador. */
+export function FechaAbs({ date, className }: { date: string | null | undefined; className?: string }) {
+  if (!date) return null;
+  return (
+    <time dateTime={date} className={className} suppressHydrationWarning>
+      {formatFecha(date)}
+    </time>
+  );
+}

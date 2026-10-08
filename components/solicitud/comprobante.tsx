@@ -1,5 +1,6 @@
 import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
-import { formatFecha, formatLitros, formatMXN } from "@/lib/format";
+import { FechaAbs } from "@/components/relative-time";
+import { formatLitros, formatMXN } from "@/lib/format";
 import { pagoKind } from "@/lib/solicitud";
 import type { SolicitudEstado } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -54,7 +55,7 @@ export function Comprobante({ s, className }: { s: SolicitudEstado; className?: 
           value={pago === "ok" ? formatMXN(s.importe_mxn) : pago === "pendiente" ? "Calculando…" : "—"}
           strong
         />
-        <Row label="Confirmada" value={formatFecha(s.confirmada_at)} />
+        <Row label="Confirmada" value={<FechaAbs date={s.confirmada_at} />} />
       </dl>
       <p className="border-t border-border bg-cream/60 px-5 py-2.5 text-xs text-muted">
         Pago simulado (estilo CoDi/SPEI) para fines académicos. No se mueve dinero real.

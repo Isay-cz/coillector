@@ -1,5 +1,6 @@
 import { ClipboardList, MapPin, MessageSquareText, Phone } from "lucide-react";
-import { formatFecha, formatLitros } from "@/lib/format";
+import { FechaAbs } from "@/components/relative-time";
+import { formatLitros } from "@/lib/format";
 import type { SolicitudEstado } from "@/lib/types";
 
 /** Datos de la solicitud (dirección, contacto, notas). */
@@ -10,7 +11,7 @@ export function DetallesSolicitud({ s }: { s: SolicitudEstado }) {
         {s.direccion}
       </Item>
       <Item icon={ClipboardList} label="Litros estimados">
-        {formatLitros(s.litros_estimados)} · {formatFecha(s.created_at)}
+        {formatLitros(s.litros_estimados)} · <FechaAbs date={s.created_at} />
       </Item>
       {s.telefono_contacto && (
         <Item icon={Phone} label="Teléfono">

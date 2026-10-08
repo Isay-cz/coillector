@@ -6,7 +6,7 @@ import { CheckCircle2, ClipboardList, Loader2, MapPin, MessageSquareText, Phone,
 import { toast } from "sonner";
 import { LitrosInput } from "@/components/litros-input";
 import { PageHeader } from "@/components/page-header";
-import { RelativeTime } from "@/components/relative-time";
+import { FechaAbs, RelativeTime } from "@/components/relative-time";
 import { Comprobante } from "@/components/solicitud/comprobante";
 import { ContactActions } from "@/components/solicitud/contact-actions";
 import { SolicitudChips } from "@/components/status-chip";
@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { useSolicitudLive } from "@/hooks/use-solicitud-live";
 import { friendlyDbError } from "@/lib/errors";
-import { formatFecha, formatLitros, formatMXN, shortId } from "@/lib/format";
+import { formatLitros, formatMXN, shortId } from "@/lib/format";
 import { pagoKind } from "@/lib/solicitud";
 import { createClient } from "@/lib/supabase/client";
 import type { SolicitudEstado } from "@/lib/types";
@@ -70,7 +70,7 @@ export function DetalleRecolector({ initial }: { initial: SolicitudEstado }) {
           )}
         </div>
       </div>
-      <p className="mt-6 text-center text-xs text-muted">Creada el {formatFecha(s.created_at)}</p>
+      <p className="mt-6 text-center text-xs text-muted">Creada el <FechaAbs date={s.created_at} /></p>
     </div>
   );
 }

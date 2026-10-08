@@ -3,7 +3,6 @@ const TZ = "America/Mexico_City";
 const mxn = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
 const num = new Intl.NumberFormat("es-MX", { maximumFractionDigits: 2 });
 const intFmt = new Intl.NumberFormat("es-MX", { maximumFractionDigits: 0 });
-const compact = new Intl.NumberFormat("es-MX", { notation: "compact", maximumFractionDigits: 1 });
 const rtf = new Intl.RelativeTimeFormat("es-MX", { numeric: "auto", style: "short" });
 const fechaHora = new Intl.DateTimeFormat("es-MX", {
   timeZone: TZ,
@@ -25,11 +24,6 @@ export function formatNumber(value: number | string | null | undefined): string 
 
 export function formatInt(value: number | string | null | undefined): string {
   return intFmt.format(Number(value ?? 0));
-}
-
-export function formatCompact(value: number | string | null | undefined): string {
-  const n = Number(value ?? 0);
-  return n >= 10000 ? compact.format(n) : intFmt.format(n);
 }
 
 export function formatLitros(value: number | string | null | undefined): string {
