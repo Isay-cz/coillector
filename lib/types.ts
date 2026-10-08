@@ -22,3 +22,7 @@ export function safeNext(next: string | null | undefined): string | null {
   if (!next.startsWith("/") || next.startsWith("//") || next.startsWith("/\\")) return null;
   return next;
 }
+
+export function isUuid(value: string | null | undefined): value is string {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value ?? "");
+}
