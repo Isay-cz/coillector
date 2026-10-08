@@ -38,6 +38,9 @@ export function friendlyAuthError(error: ErrorLike): string {
   const text = error?.message ?? "";
   const code = error?.code ?? "";
 
+  if (code === "signup_disabled" || code === "email_provider_disabled" || /Signups not allowed|signups are disabled/i.test(text)) {
+    return "El registro de cuentas nuevas está desactivado por ahora. Entra con una cuenta demo.";
+  }
   if (code === "invalid_credentials" || /Invalid login credentials/i.test(text)) {
     return "Correo o contraseña incorrectos.";
   }

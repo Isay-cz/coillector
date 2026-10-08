@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, MailCheck, UserPlus } from "lucide-react";
 import { toast } from "sonner";
+import { DemoLoginButtons } from "@/components/auth/demo-login";
 import { RoleHero } from "@/components/auth/role-hero";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -198,9 +199,10 @@ export function RegistroForm({ rol }: { rol: Rol }) {
         )}
 
         {errors.form && (
-          <p role="alert" className="rounded-xl bg-danger-soft p-3 text-sm text-danger">
-            {errors.form}
-          </p>
+          <div role="alert" className="flex flex-col gap-3 rounded-xl bg-danger-soft p-3 text-sm text-danger">
+            <p>{errors.form}</p>
+            {/cuenta demo/.test(errors.form) && <DemoLoginButtons order={rol === "recolector" ? ["recolector", "vendedor"] : ["vendedor", "recolector"]} />}
+          </div>
         )}
 
         <Button type="submit" size="lg" disabled={loading} className="mt-1 w-full">
