@@ -24,7 +24,7 @@ export function DetalleVendedor({ initial }: { initial: SolicitudEstado }) {
       <PageHeader backHref="/vendedor" title={s.nombre_comercio} description={`Solicitud #${shortId(s.id)}`} />
       <SolicitudChips s={s} className="-mt-2 mb-5" />
 
-      <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-start md:gap-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-start md:gap-6">
         <div className="flex flex-col gap-4">
           {pendiente ? (
             <Card className="flex flex-col items-center gap-4 p-5 text-center">

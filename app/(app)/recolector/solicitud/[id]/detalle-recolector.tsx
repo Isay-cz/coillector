@@ -31,7 +31,7 @@ export function DetalleRecolector({ initial }: { initial: SolicitudEstado }) {
       <PageHeader backHref="/recolector" title={s.nombre_comercio} description={`Solicitud #${shortId(s.id)}`} />
       <SolicitudChips s={s} className="-mt-2 mb-5" />
 
-      <div className="grid gap-4 md:grid-cols-2 md:items-start md:gap-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-start md:gap-6">
         <Card className="p-5">
           <ul className="space-y-3 text-sm">
             <Info icon={MapPin} label="Dirección">
@@ -163,10 +163,10 @@ function ConfirmarForm({ s, onConfirmed }: { s: SolicitudEstado; onConfirmed: ()
               className="mt-0.5 size-5 shrink-0 accent-[var(--success)]"
             />
             <span className="text-sm">
-              <span className="flex items-center gap-1.5 font-medium">
-                <ShieldCheck className="size-4 text-success" aria-hidden /> Confirmo que el aceite cumple la calidad mínima
+              <span className="block font-medium">Confirmo que el aceite cumple la calidad mínima</span>
+              <span className="mt-0.5 flex items-center gap-1.5 text-muted">
+                <ShieldCheck className="size-4 shrink-0 text-success" aria-hidden /> Sin agua, sin restos sólidos y en recipiente cerrado.
               </span>
-              <span className="mt-0.5 block text-muted">Sin agua, sin restos sólidos y en recipiente cerrado.</span>
             </span>
           </label>
           {errors.calidad && (

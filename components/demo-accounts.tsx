@@ -47,7 +47,7 @@ export function DemoAccounts() {
         </span>
         <ChevronDown className="size-5 text-muted transition-transform duration-200 group-open:rotate-180" aria-hidden />
       </summary>
-      <div className="grid gap-4 border-t border-border p-5 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 border-t border-border p-5 md:grid-cols-2">
         <div className="space-y-2">
           <CopyRow label="Vendedor" value={DEMO_ACCOUNTS.vendedor} />
           <CopyRow label="Recolector" value={DEMO_ACCOUNTS.recolector} />

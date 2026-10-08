@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BarChart3, ClipboardList, Clock, Coins, Droplet, Droplets, Store, Truck } from "lucide-react";
 import { AppShell } from "@/components/app-shell/app-shell";
-import { LitrosPorDiaChart } from "@/components/charts/litros-por-dia";
+import { LitrosPorDiaLazy } from "@/components/charts/litros-por-dia-lazy";
 import { LiveDot, LiveMetrics } from "@/components/live-metrics";
 import { PublicHeader } from "@/components/public-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -45,7 +45,7 @@ export default async function DashboardPage() {
           <h2 className="font-display text-lg font-semibold">Litros recolectados por día</h2>
         </div>
         <p className="mb-3 text-sm text-muted">Últimos 14 días (hora de CDMX)</p>
-        <LitrosPorDiaChart rows={dias} />
+        <LitrosPorDiaLazy rows={dias} />
       </Card>
 
       {perfil && mio && <TusNumeros perfil={perfil} mio={mio} />}

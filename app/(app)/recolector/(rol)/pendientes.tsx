@@ -80,7 +80,7 @@ export function Pendientes({ nombre, initial }: { nombre: string | null; initial
           description="No hay solicitudes pendientes. Esta lista se actualiza sola cuando un vendedor pida una recolección."
         />
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {rows.map((s) => (
             <li key={s.id}>
               <PendienteCard s={s} />

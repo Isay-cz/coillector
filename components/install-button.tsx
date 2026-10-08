@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Download, Share, SquarePlus, Check } from "lucide-react";
+import { Check, Download, MoreVertical, Share, SquarePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -91,7 +91,18 @@ export function InstallButton({ className, variant = "outline" }: { className?: 
     );
   }
 
-  if (!canPrompt) return null;
+  if (!canPrompt) {
+    // Navegadores sin evento beforeinstallprompt (o que aún no lo disparan): instrucciones manuales.
+    return (
+      <p className={cn("flex items-start gap-2 text-sm text-muted", className)}>
+        <MoreVertical className="mt-0.5 size-4 shrink-0" aria-hidden />
+        <span>
+          Abre el menú del navegador y elige <span className="font-medium text-ink">Instalar app</span> o{" "}
+          <span className="font-medium text-ink">Agregar a la pantalla principal</span>.
+        </span>
+      </p>
+    );
+  }
 
   return (
     <Button

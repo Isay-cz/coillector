@@ -101,7 +101,7 @@ export default async function LandingPage() {
           <h2 id="como" className="mb-4 text-2xl font-bold md:text-3xl">
             Cómo funciona
           </h2>
-          <ol className="grid gap-3 md:grid-cols-3 md:gap-4">
+          <ol className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
             {PASOS.map((p, i) => (
               <li key={p.title} className="relative rounded-2xl border border-border bg-card p-5 shadow-card">
                 <div className="flex items-center gap-3">
@@ -118,7 +118,7 @@ export default async function LandingPage() {
         </section>
 
         {/* Demo + instalación */}
-        <section className="mx-auto grid max-w-[1100px] gap-4 px-4 py-12 md:grid-cols-[1.4fr_1fr] md:px-6 md:py-16">
+        <section className="mx-auto grid max-w-[1100px] grid-cols-1 gap-4 px-4 py-12 md:grid-cols-[1.4fr_1fr] md:items-start md:px-6 md:py-16">
           <DemoAccounts />
           <div className="flex flex-col justify-center gap-3 rounded-2xl border border-dashed border-border p-5">
             <p className="font-display text-lg font-semibold">Llévala en tu celular</p>

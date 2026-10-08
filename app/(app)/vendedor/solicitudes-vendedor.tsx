@@ -53,7 +53,7 @@ export function SolicitudesVendedor({
   const recibido = rows.filter((r) => pagoKind(r) === "ok").reduce((acc, r) => acc + Number(r.importe_mxn ?? 0), 0);
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in pb-16 md:pb-0">
       <div className="mb-5 flex items-end justify-between gap-3">
         <div>
           <p className="text-sm text-muted">Hola{nombre ? `, ${nombre.split(" ")[0]}` : ""} 👋</p>
@@ -91,7 +91,7 @@ export function SolicitudesVendedor({
           }
         />
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {rows.map((s) => (
             <li key={s.id}>
               <SolicitudCard s={s} />
