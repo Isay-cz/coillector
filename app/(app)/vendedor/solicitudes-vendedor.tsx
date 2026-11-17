@@ -53,7 +53,7 @@ export function SolicitudesVendedor({
   const recibido = rows.filter((r) => pagoKind(r) === "ok").reduce((acc, r) => acc + Number(r.importe_mxn ?? 0), 0);
 
   return (
-    <div className="animate-fade-in pb-16 md:pb-0">
+    <div className="animate-fade-in">
       <div className="mb-5 flex items-end justify-between gap-3">
         <div>
           <p className="text-sm text-muted">Hola{nombre ? `, ${nombre.split(" ")[0]}` : ""} 👋</p>
@@ -76,6 +76,14 @@ export function SolicitudesVendedor({
           tone="success"
         />
       </section>
+
+      {rows.length > 0 && (
+        <Button asChild size="lg" className="mb-5 w-full bg-amber text-[#1c1c1a] hover:bg-amber/90 md:hidden">
+          <Link href="/vendedor/nueva" onClick={() => toast.dismiss()}>
+            <Plus aria-hidden /> Nueva solicitud
+          </Link>
+        </Button>
+      )}
 
       {rows.length === 0 ? (
         <EmptyState
@@ -100,14 +108,6 @@ export function SolicitudesVendedor({
         </ul>
       )}
 
-      {/* Botón flotante en móvil, por encima de la navegación inferior */}
-      <Link
-        href="/vendedor/nueva"
-        className="fixed right-4 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-30 inline-flex h-14 items-center gap-2 rounded-full bg-amber px-5 font-semibold text-[#1c1c1a] shadow-float transition-transform duration-150 active:scale-95 md:hidden"
-        onClick={() => toast.dismiss()}
-      >
-        <Plus className="size-5" aria-hidden /> Nueva solicitud
-      </Link>
     </div>
   );
 }

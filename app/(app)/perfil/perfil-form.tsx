@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Lock, Save } from "lucide-react";
 import { toast } from "sonner";
+import { DireccionPicker, REFERENCIAS_MAX, validarUbicacion, type UbicacionValor } from "@/components/direccion/direccion-picker";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
@@ -13,7 +14,7 @@ import { friendlyDbError } from "@/lib/errors";
 import type { Perfil } from "@/lib/types";
 import { normalizePhone, validatePhone } from "@/lib/validation";
 
-type Campos = { nombre: string; telefono: string; nombre_comercio: string; direccion: string; empresa: string };
+type Campos = { nombre: string; telefono: string; nombre_comercio: string; empresa: string };
 
 export function PerfilForm({ perfil }: { perfil: Perfil }) {
   const router = useRouter();
@@ -22,10 +23,15 @@ export function PerfilForm({ perfil }: { perfil: Perfil }) {
     nombre: perfil.nombre ?? "",
     telefono: perfil.telefono ?? "",
     nombre_comercio: perfil.nombre_comercio ?? "",
-    direccion: perfil.direccion ?? "",
     empresa: perfil.empresa ?? "",
   });
-  const [errors, setErrors] = useState<Partial<Record<keyof Campos, string | null>>>({});
+  const [ubicacion, setUbicacion] = useState<UbicacionValor>({
+    direccion: perfil.direccion ?? "",
+    lat: perfil.lat,
+    lng: perfil.lng,
+    referencias: perfil.referencias ?? "",
+  });
+  const [errors, setErrors] = useState<Partial<Record<keyof Campos | "direccion", string | null>>>({});
   const [loading, setLoading] = useState(false);
   const set = (k: keyof Campos) => (e: React.ChangeEvent<HTMLInputElement>) => setV((p) => ({ ...p, [k]: e.target.value }));
 
@@ -34,14 +40,16 @@ export function PerfilForm({ perfil }: { perfil: Perfil }) {
     const found = {
       nombre: v.nombre.trim() ? null : "Tu nombre es obligatorio.",
       telefono: validatePhone(v.telefono, { required: false }),
+      // La dirección es opcional en el perfil, pero si la escriben debe quedar marcada en el mapa.
+      direccion: vendedor && ubicacion.direccion.trim() ? validarUbicacion(ubicacion) : null,
     };
     setErrors(found);
-    if (found.nombre || found.telefono) return;
+    if (found.nombre || found.telefono || found.direccion) return;
 
     setLoading(true);
     // Solo columnas editables: el rol y el correo no se pueden cambiar.
     const cambios = vendedor
-      ? { nombre: v.nombre.trim(), telefono: normalizePhone(v.telefono) || null, nombre_comercio: v.nombre_comercio.trim() || null, direccion: v.direccion.trim() || null }
+      ? { nombre: v.nombre.trim(), telefono: normalizePhone(v.telefono) || null, nombre_comercio: v.nombre_comercio.trim() || null, ...ubicacionParaGuardar(ubicacion) }
       : { nombre: v.nombre.trim(), telefono: normalizePhone(v.telefono) || null, empresa: v.empresa.trim() || null };
     const { error } = await createClient().from("users").update(cambios).eq("id", perfil.id);
     setLoading(false);
@@ -68,8 +76,17 @@ export function PerfilForm({ perfil }: { perfil: Perfil }) {
             <Field id="nombre_comercio" label="Nombre del comercio">
               <Input id="nombre_comercio" value={v.nombre_comercio} onChange={set("nombre_comercio")} />
             </Field>
-            <Field id="direccion" label="Dirección del comercio" hint="Se usa para prellenar tus solicitudes.">
-              <Input id="direccion" value={v.direccion} onChange={set("direccion")} autoComplete="street-address" />
+            <Field id="direccion" label="Dirección del comercio" error={errors.direccion}>
+              <DireccionPicker value={ubicacion} onChange={setUbicacion} error={errors.direccion} />
+            </Field>
+            <Field id="referencias" label="Referencias (opcional)" hint="Se usan para prellenar tus solicitudes.">
+              <Input
+                id="referencias"
+                value={ubicacion.referencias}
+                maxLength={REFERENCIAS_MAX}
+                onChange={(e) => setUbicacion((u) => ({ ...u, referencias: e.target.value }))}
+                placeholder="Ej. frente al Oxxo, puesto con lona azul"
+              />
             </Field>
           </>
         ) : (
@@ -99,4 +116,14 @@ function ReadOnly({ label, value, capitalize }: { label: string; value: string; 
       <p className={`truncate text-sm font-medium ${capitalize ? "capitalize" : ""}`}>{value}</p>
     </div>
   );
+}
+
+function ubicacionParaGuardar(u: UbicacionValor) {
+  const direccion = u.direccion.trim();
+  return {
+    direccion: direccion || null,
+    lat: direccion ? u.lat : null,
+    lng: direccion ? u.lng : null,
+    referencias: u.referencias.trim() || null,
+  };
 }

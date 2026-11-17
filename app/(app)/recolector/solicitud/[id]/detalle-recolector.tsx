@@ -8,6 +8,7 @@ import { LitrosInput } from "@/components/litros-input";
 import { PageHeader } from "@/components/page-header";
 import { FechaAbs, RelativeTime } from "@/components/relative-time";
 import { Comprobante } from "@/components/solicitud/comprobante";
+import { Mapa } from "@/components/mapa/mapa";
 import { ContactActions } from "@/components/solicitud/contact-actions";
 import { SolicitudChips } from "@/components/status-chip";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ export function DetalleRecolector({ initial }: { initial: SolicitudEstado }) {
           <ul className="space-y-3 text-sm">
             <Info icon={MapPin} label="Dirección">
               {s.direccion}
+              {s.referencias && <span className="mt-0.5 block text-muted">{s.referencias}</span>}
             </Info>
             <Info icon={ClipboardList} label="Litros estimados">
               <span className="font-display text-base font-semibold">{formatLitros(s.litros_estimados)}</span> · solicitada{" "}
@@ -53,7 +55,15 @@ export function DetalleRecolector({ initial }: { initial: SolicitudEstado }) {
               </Info>
             )}
           </ul>
-          <ContactActions direccion={s.direccion} telefono={s.telefono_contacto} className="mt-5" />
+          {s.lat != null && s.lng != null && (
+            <Mapa
+              className="mt-5 h-44"
+              marcadores={[{ id: "negocio", lat: s.lat, lng: s.lng, tono: "parada", etiqueta: "•", titulo: s.nombre_comercio ?? undefined }]}
+              centro={{ lat: s.lat, lng: s.lng }}
+              zoom={16}
+            />
+          )}
+          <ContactActions direccion={s.direccion} lat={s.lat} lng={s.lng} telefono={s.telefono_contacto} className="mt-5" />
         </Card>
 
         <div className="flex flex-col gap-4">

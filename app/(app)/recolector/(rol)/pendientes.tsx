@@ -118,7 +118,7 @@ function PendienteCard({ s }: { s: SolicitudEstado }) {
         </p>
       )}
       <div className="relative z-10 mt-3 flex items-center gap-2">
-        <ContactActions direccion={s.direccion} telefono={s.telefono_contacto} size="sm" className="flex-1" />
+        <ContactActions direccion={s.direccion} lat={s.lat} lng={s.lng} telefono={s.telefono_contacto} size="sm" className="flex-1" />
         <ChevronRight className="pointer-events-none size-5 shrink-0 text-muted" aria-hidden />
       </div>
     </article>

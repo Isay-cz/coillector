@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
+import { DireccionPicker, REFERENCIAS_MAX, validarUbicacion, type UbicacionValor } from "@/components/direccion/direccion-picker";
 import { LitrosInput } from "@/components/litros-input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,16 +15,30 @@ import { createClient } from "@/lib/supabase/client";
 import { friendlyDbError } from "@/lib/errors";
 import { NOTAS_MAX, normalizePhone, parseLitros, validatePhone, validateRequired } from "@/lib/validation";
 
-type Errors = Partial<Record<"nombre_comercio" | "direccion" | "telefono" | "litros" | "notas" | "form", string | null>>;
+type Errors = Partial<Record<"nombre_comercio" | "direccion" | "referencias" | "telefono" | "litros" | "notas" | "form", string | null>>;
+
+export type NuevaSolicitudDefaults = {
+  nombre_comercio: string;
+  direccion: string;
+  telefono: string;
+  lat: number | null;
+  lng: number | null;
+  referencias: string;
+};
 
 export function NuevaSolicitudForm({
   defaults,
 }: {
-  defaults: { nombre_comercio: string; direccion: string; telefono: string };
+  defaults: NuevaSolicitudDefaults;
 }) {
   const router = useRouter();
   const [nombreComercio, setNombreComercio] = useState(defaults.nombre_comercio);
-  const [direccion, setDireccion] = useState(defaults.direccion);
+  const [ubicacion, setUbicacion] = useState<UbicacionValor>({
+    direccion: defaults.direccion,
+    lat: defaults.lat,
+    lng: defaults.lng,
+    referencias: defaults.referencias,
+  });
   const [telefono, setTelefono] = useState(defaults.telefono);
   const [litros, setLitros] = useState("");
   const [notas, setNotas] = useState("");
@@ -33,7 +48,7 @@ export function NuevaSolicitudForm({
   function validate(): Errors {
     return {
       nombre_comercio: validateRequired(nombreComercio, "El nombre del comercio"),
-      direccion: validateRequired(direccion, "La dirección"),
+      direccion: validarUbicacion(ubicacion),
       telefono: validatePhone(telefono, { required: false }),
       litros: parseLitros(litros).error,
       notas: notas.length > NOTAS_MAX ? `Máximo ${NOTAS_MAX} caracteres.` : null,
@@ -44,7 +59,7 @@ export function NuevaSolicitudForm({
     e.preventDefault();
     const found = validate();
     setErrors(found);
-    const first = (["litros", "nombre_comercio", "direccion", "telefono", "notas"] as const).find((k) => found[k]);
+    const first = (["litros", "nombre_comercio", "direccion", "referencias", "telefono", "notas"] as const).find((k) => found[k]);
     if (first) {
       document.getElementById(first)?.focus();
       return;
@@ -55,7 +70,10 @@ export function NuevaSolicitudForm({
       .from("solicitudes")
       .insert({
         nombre_comercio: nombreComercio.trim(),
-        direccion: direccion.trim(),
+        direccion: ubicacion.direccion.trim(),
+        lat: ubicacion.lat,
+        lng: ubicacion.lng,
+        referencias: ubicacion.referencias.trim() || null,
         litros_estimados: parseLitros(litros).value!,
         telefono_contacto: normalizePhone(telefono) || null,
         notas: notas.trim() || null,
@@ -69,6 +87,32 @@ export function NuevaSolicitudForm({
       toast.error(message);
       setLoading(false);
       return;
+    }
+
+    // Guardamos comercio y ubicación en el perfil para prellenar la próxima solicitud.
+    const perfilCambio =
+      nombreComercio.trim() !== defaults.nombre_comercio ||
+      ubicacion.direccion.trim() !== defaults.direccion ||
+      ubicacion.lat !== defaults.lat ||
+      ubicacion.lng !== defaults.lng ||
+      ubicacion.referencias.trim() !== defaults.referencias ||
+      (!defaults.telefono && normalizePhone(telefono));
+    if (perfilCambio) {
+      const supabase = createClient();
+      const { data: auth } = await supabase.auth.getUser();
+      if (auth.user) {
+        await supabase
+          .from("users")
+          .update({
+            nombre_comercio: nombreComercio.trim(),
+            direccion: ubicacion.direccion.trim(),
+            lat: ubicacion.lat,
+            lng: ubicacion.lng,
+            referencias: ubicacion.referencias.trim() || null,
+            ...(!defaults.telefono && normalizePhone(telefono) ? { telefono: normalizePhone(telefono) } : {}),
+          })
+          .eq("id", auth.user.id);
+      }
     }
 
     toast.success("Solicitud creada");
@@ -111,14 +155,28 @@ export function NuevaSolicitudForm({
           />
         </Field>
         <Field id="direccion" label="Dirección" error={errors.direccion}>
+          <DireccionPicker
+            value={ubicacion}
+            onChange={(v) => {
+              setUbicacion(v);
+              if (errors.direccion) setErrors((p) => ({ ...p, direccion: validarUbicacion(v) }));
+            }}
+            error={errors.direccion}
+          />
+        </Field>
+        <Field
+          id="referencias"
+          label="Referencias (opcional)"
+          hint="Ej. frente al Oxxo, puesto con lona azul."
+          error={errors.referencias}
+        >
           <Input
-            id="direccion"
-            value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
-            placeholder="Calle, número y colonia"
-            autoComplete="street-address"
-            aria-invalid={Boolean(errors.direccion)}
-            aria-describedby={errors.direccion ? "direccion-error" : undefined}
+            id="referencias"
+            value={ubicacion.referencias}
+            maxLength={REFERENCIAS_MAX}
+            onChange={(e) => setUbicacion((u) => ({ ...u, referencias: e.target.value }))}
+            placeholder="¿Cómo encontramos tu negocio?"
+            aria-describedby={errors.referencias ? "referencias-error" : "referencias-hint"}
           />
         </Field>
         <Field id="telefono" label="Teléfono de contacto (opcional)" hint="Para que el recolector te llame al llegar." error={errors.telefono}>

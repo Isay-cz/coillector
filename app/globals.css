@@ -150,3 +150,69 @@
   padding-top: env(safe-area-inset-top);
 }
 
+
+/* ---------- Mapa (Leaflet) ---------- */
+.leaflet-container {
+  font: inherit;
+  background: var(--cream);
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+}
+.coil-pin {
+  position: relative;
+}
+.coil-pin__gota {
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--amber);
+  border: 3px solid #1f3d2b;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 0.3);
+}
+.coil-pin__gota::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border-radius: 9999px;
+  background: #1f3d2b;
+}
+.coil-pin__sombra {
+  position: absolute;
+  left: 11px;
+  bottom: 0;
+  width: 14px;
+  height: 5px;
+  border-radius: 9999px;
+  background: rgb(0 0 0 / 0.25);
+}
+.coil-parada span {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #1f3d2b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
+}
+.coil-parada--inactiva span {
+  background: #a5a89e;
+}
+.coil-yo span {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #2b7de9;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 6px rgb(43 125 233 / 0.25);
+}

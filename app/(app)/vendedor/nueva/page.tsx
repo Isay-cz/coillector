@@ -19,6 +19,9 @@ export default async function NuevaSolicitudPage() {
           nombre_comercio: perfil.nombre_comercio ?? "",
           direccion: perfil.direccion ?? "",
           telefono: perfil.telefono ?? "",
+          lat: perfil.lat,
+          lng: perfil.lng,
+          referencias: perfil.referencias ?? "",
         }}
       />
     </div>

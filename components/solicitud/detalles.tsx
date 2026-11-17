@@ -9,6 +9,7 @@ export function DetallesSolicitud({ s }: { s: SolicitudEstado }) {
     <ul className="space-y-3 text-sm">
       <Item icon={MapPin} label="Dirección">
         {s.direccion}
+        {s.referencias && <span className="mt-0.5 block text-muted">{s.referencias}</span>}
       </Item>
       <Item icon={ClipboardList} label="Litros estimados">
         {formatLitros(s.litros_estimados)} · <FechaAbs date={s.created_at} />

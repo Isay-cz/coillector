@@ -57,6 +57,9 @@ export type Database = {
       };
       solicitudes: {
         Row: {
+          lat: number | null;
+          lng: number | null;
+          referencias: string | null;
           created_at: string;
           direccion: string;
           id: string;
@@ -68,6 +71,9 @@ export type Database = {
           zona: string;
         };
         Insert: {
+          lat?: number | null;
+          lng?: number | null;
+          referencias?: string | null;
           created_at?: string;
           direccion: string;
           id?: string;
@@ -79,6 +85,9 @@ export type Database = {
           zona?: string;
         };
         Update: {
+          lat?: number | null;
+          lng?: number | null;
+          referencias?: string | null;
           created_at?: string;
           direccion?: string;
           id?: string;
@@ -93,6 +102,9 @@ export type Database = {
       };
       users: {
         Row: {
+          lat: number | null;
+          lng: number | null;
+          referencias: string | null;
           created_at: string;
           direccion: string | null;
           email: string;
@@ -104,6 +116,9 @@ export type Database = {
           telefono: string | null;
         };
         Insert: {
+          lat?: number | null;
+          lng?: number | null;
+          referencias?: string | null;
           created_at?: string;
           direccion?: string | null;
           email: string;
@@ -115,6 +130,9 @@ export type Database = {
           telefono?: string | null;
         };
         Update: {
+          lat?: number | null;
+          lng?: number | null;
+          referencias?: string | null;
           created_at?: string;
           direccion?: string | null;
           email?: string;
@@ -161,6 +179,9 @@ export type Database = {
       };
       solicitudes_estado: {
         Row: {
+          lat: number | null;
+          lng: number | null;
+          referencias: string | null;
           calidad_apta: boolean | null;
           confirmacion_id: string | null;
           confirmada_at: string | null;
