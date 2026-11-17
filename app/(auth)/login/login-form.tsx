@@ -14,7 +14,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { createClient } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/errors";
 import { homeForRole, type Rol } from "@/lib/types";
-import { validateEmail } from "@/lib/validation";
+import { parseIdentificador } from "@/lib/validation";
 
 const COPY = {
   vendedor: { title: "Entra a tu cuenta", subtitle: "Solicita recolecciones y sigue tus pagos." },
@@ -43,14 +43,15 @@ export function LoginForm({
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const emailError = validateEmail(email);
+    const id = parseIdentificador(email);
+    const emailError = id.error;
     const passwordError = password ? null : "Ingresa tu contraseña.";
     setErrors({ email: emailError, password: passwordError });
     if (emailError || passwordError) return;
 
     setLoading(true);
     const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email: id.email ?? email.trim(), password });
     if (error || !data.user) {
       const message = friendlyAuthError(error);
       setErrors({ form: message });
@@ -86,7 +87,7 @@ export function LoginForm({
       {linkError && (
         <p className="mb-4 flex items-start gap-2 rounded-xl bg-warning-soft p-3 text-sm text-warning">
           <Info className="mt-0.5 size-4 shrink-0" aria-hidden /> El enlace expiró o ya se usó. Inicia sesión con tu
-          correo y contraseña.
+          celular o correo y contraseña.
         </p>
       )}
       {fromQr && (
@@ -97,16 +98,16 @@ export function LoginForm({
       )}
 
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
-        <Field id="email" label="Correo electrónico" error={errors.email}>
+        <Field id="email" label="Celular o correo" error={errors.email}>
           <Input
             id="email"
-            type="email"
+            type="text"
             inputMode="email"
-            autoComplete="email"
+            autoComplete="username"
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck={false}
-            placeholder="tu@correo.com"
+            placeholder="55 1234 5678 o tu@correo.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             aria-invalid={Boolean(errors.email)}

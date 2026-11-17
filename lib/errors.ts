@@ -42,7 +42,7 @@ export function friendlyAuthError(error: ErrorLike): string {
     return "El registro de cuentas nuevas está desactivado por ahora. Entra con una cuenta demo.";
   }
   if (code === "invalid_credentials" || /Invalid login credentials/i.test(text)) {
-    return "Correo o contraseña incorrectos.";
+    return "Celular, correo o contraseña incorrectos.";
   }
   if (code === "email_not_confirmed" || /Email not confirmed/i.test(text)) {
     return "Confirma tu correo antes de entrar (revisa tu bandeja de entrada).";

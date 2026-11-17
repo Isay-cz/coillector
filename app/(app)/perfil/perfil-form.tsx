@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
 import { friendlyDbError } from "@/lib/errors";
 import type { Perfil } from "@/lib/types";
-import { normalizePhone, validatePhone } from "@/lib/validation";
+import { contactoVisible, normalizePhone, validatePhone } from "@/lib/validation";
 
 type Campos = { nombre: string; telefono: string; nombre_comercio: string; empresa: string };
 
@@ -95,7 +95,7 @@ export function PerfilForm({ perfil }: { perfil: Perfil }) {
           </Field>
         )}
         <div className="grid grid-cols-2 gap-3">
-          <ReadOnly label="Correo" value={perfil.email} />
+          <ReadOnly label={contactoVisible(perfil.email).tipo === "telefono" ? "Celular de acceso" : "Correo"} value={contactoVisible(perfil.email).valor} />
           <ReadOnly label="Rol" value={perfil.rol} capitalize />
         </div>
         <Button type="submit" disabled={loading} className="mt-1">

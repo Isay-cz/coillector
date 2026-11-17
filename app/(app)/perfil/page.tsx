@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { contactoVisible } from "@/lib/validation";
 import { redirect } from "next/navigation";
-import { Mail, Store, Truck } from "lucide-react";
+import { Mail, Phone, Store, Truck } from "lucide-react";
 import { InstallButton } from "@/components/install-button";
 import { SignOutButton } from "@/components/sign-out-button";
 import { Card } from "@/components/ui/card";
@@ -20,12 +21,13 @@ export default async function PerfilPage() {
     <div className="mx-auto max-w-xl animate-fade-in">
       <div className="mb-6 flex items-center gap-4">
         <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-amber font-display text-xl font-bold text-[#1c1c1a]">
-          {initials(perfil.nombre ?? perfil.email)}
+          {initials(perfil.nombre ?? perfil.email.split("@")[0].replace(/\d/g, ""))}
         </span>
         <div className="min-w-0">
           <h1 className="truncate text-2xl font-bold">{perfil.nombre ?? "Mi perfil"}</h1>
           <p className="flex items-center gap-1.5 truncate text-sm text-muted">
-            <Mail className="size-4 shrink-0" aria-hidden /> {perfil.email}
+            {contactoVisible(perfil.email).tipo === "telefono" ? <Phone className="size-4 shrink-0" aria-hidden /> : <Mail className="size-4 shrink-0" aria-hidden />}{" "}
+            {contactoVisible(perfil.email).valor}
           </p>
           <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-amber-soft px-2.5 py-1 text-xs font-semibold capitalize text-warning">
             <RolIcon className="size-3.5" aria-hidden /> {perfil.rol}

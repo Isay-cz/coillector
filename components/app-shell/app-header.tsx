@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { contactoVisible } from "@/lib/validation";
 import { Logo } from "@/components/logo";
 import { initials } from "@/lib/format";
 import { homeForRole, type Perfil, type Rol } from "@/lib/types";
@@ -19,11 +20,11 @@ export function AppHeader({ perfil }: { perfil: Perfil }) {
           className="flex items-center gap-2 rounded-full transition-opacity duration-150 hover:opacity-90"
         >
           <span className="hidden text-right text-xs leading-tight sm:block">
-            <span className="block font-medium text-white">{perfil.nombre ?? perfil.email}</span>
+            <span className="block font-medium text-white">{perfil.nombre ?? contactoVisible(perfil.email).valor}</span>
             <span className="block capitalize text-white/70">{rol}</span>
           </span>
           <span className="flex size-10 items-center justify-center rounded-full bg-amber font-display text-sm font-bold text-[#1c1c1a] ring-2 ring-white/20">
-            {initials(perfil.nombre ?? perfil.email)}
+            {initials(perfil.nombre ?? perfil.email.split("@")[0].replace(/\d/g, ""))}
           </span>
         </Link>
       </div>

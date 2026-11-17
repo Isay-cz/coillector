@@ -101,7 +101,7 @@ export function NuevaSolicitudForm({
       const supabase = createClient();
       const { data: auth } = await supabase.auth.getUser();
       if (auth.user) {
-        await supabase
+        const { error: perfilError } = await supabase
           .from("users")
           .update({
             nombre_comercio: nombreComercio.trim(),
@@ -112,6 +112,8 @@ export function NuevaSolicitudForm({
             ...(!defaults.telefono && normalizePhone(telefono) ? { telefono: normalizePhone(telefono) } : {}),
           })
           .eq("id", auth.user.id);
+        // No bloquea: la solicitud ya se creó; solo no se prellenará la próxima vez.
+        if (perfilError) console.warn("No se pudo actualizar el perfil", perfilError.message);
       }
     }
 
