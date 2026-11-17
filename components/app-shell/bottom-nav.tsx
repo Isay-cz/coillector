@@ -14,7 +14,7 @@ export function BottomNav({ rol }: { rol: Rol }) {
       aria-label="Navegación principal"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 pb-safe backdrop-blur supports-[backdrop-filter]:bg-card/85 md:hidden"
     >
-      <ul className="mx-auto grid max-w-md grid-cols-4">
+      <ul className={cn("mx-auto grid max-w-md", NAV_ITEMS[rol].length > 4 ? "grid-cols-5" : "grid-cols-4")}>
         {NAV_ITEMS[rol].map((item) => {
           const active = isActive(pathname, item);
           return (
@@ -29,7 +29,7 @@ export function BottomNav({ rol }: { rol: Rol }) {
               >
                 <span
                   className={cn(
-                    "flex h-8 w-14 items-center justify-center rounded-full transition-colors duration-150",
+                    "flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-150",
                     active && "bg-amber-soft",
                   )}
                 >

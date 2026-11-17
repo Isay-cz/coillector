@@ -1,4 +1,4 @@
-import { BarChart3, ClipboardList, History, ListChecks, PlusCircle, ScanLine, UserRound } from "lucide-react";
+import { BarChart3, ClipboardList, History, ListChecks, PlusCircle, Route, ScanLine, UserRound } from "lucide-react";
 import type { NavItemKey } from "./nav-items";
 
 const ICONS = {
@@ -7,6 +7,7 @@ const ICONS = {
   impacto: BarChart3,
   perfil: UserRound,
   pendientes: ClipboardList,
+  ruta: Route,
   escanear: ScanLine,
   historial: History,
 } satisfies Record<NavItemKey, unknown>;

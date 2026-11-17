@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, ClipboardList, Droplets, MessageSquareText, PartyPopper, ScanLine } from "lucide-react";
+import { ChevronRight, ClipboardList, Droplets, MessageSquareText, PartyPopper, Route, ScanLine } from "lucide-react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/empty-state";
 import { RelativeTime } from "@/components/relative-time";
@@ -72,6 +72,17 @@ export function Pendientes({ nombre, initial }: { nombre: string | null; initial
           </Link>
         </Button>
       </div>
+
+      {rows.length > 1 && (
+        <Button asChild variant="outline" size="lg" className="mb-5 w-full justify-between">
+          <Link href="/recolector/ruta">
+            <span className="flex min-w-0 items-center gap-2">
+              <Route aria-hidden /> <span className="truncate">Ver ruta sugerida</span>
+            </span>
+            <ChevronRight aria-hidden />
+          </Link>
+        </Button>
+      )}
 
       {rows.length === 0 ? (
         <EmptyState

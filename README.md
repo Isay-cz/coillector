@@ -32,10 +32,11 @@ MVP del Sprint 2 · Proyecto académico, Universidad La Salle México · **Pagos
 |---|---|---|
 | `/` | público | Landing, métricas en vivo (`resumen_publico`), cuentas demo, instalar app |
 | `/dashboard` | público | Métricas + litros por día; "Tus números" si hay sesión |
-| `/login`, `/registro/vendedor`, `/registro/recolector` | público | Auth por rol |
+| `/login`, `/registro/vendedor`, `/registro/recolector` | público | Auth por rol, solo con celular o correo + contraseña |
 | `/auth/callback` | público | Intercambia el código del correo de confirmación |
 | `/vendedor`, `/vendedor/nueva`, `/vendedor/solicitud/[id]` | vendedor | Solicitudes, nueva solicitud, detalle con QR y línea de tiempo |
 | `/recolector`, `/recolector/escanear`, `/recolector/historial` | recolector | Pendientes, escáner, historial |
+| `/recolector/ruta` | recolector | Ruta sugerida: paradas cercanas ordenadas (vecino más cercano + 2-opt) y enlace a Google Maps |
 | `/recolector/solicitud/[id]` | recolector (destino del QR) | Confirmar recolección y ver el pago en vivo |
 | `/perfil` | con sesión | Editar datos, instalar app, cerrar sesión |
 | `/qr` | público | QR de 1024 px del sitio para la portada del reporte |
@@ -77,4 +78,8 @@ Cuentas demo: `vendedor.demo@ejemplo.com` y `recolector.demo@ejemplo.com`.
 - **QR:** se generan localmente con `qrcode` (sin APIs externas).
 - **Escáner:** `BarcodeDetector` nativo cuando existe (Android/Chrome) y **jsQR** como respaldo (iOS Safari). Se descartó `html5-qrcode` porque su decodificador no leía entre 5 % y 15 % de nuestros QR en pruebas (fallo determinista según el contenido), mientras que jsQR leyó el 100 % de los mismos códigos. Si la cámara no está disponible se puede escribir el código corto de 8 caracteres que aparece bajo el QR.
 - **PWA:** `app/manifest.ts`, íconos 192/512/maskable y un service worker manual (`public/sw.js`): precachea `/offline` con sus estilos, red-primero para navegación, cache-primero para `/_next/static` y **nunca** intercepta peticiones a Supabase.
+- **Registro con celular:** sin proveedor de SMS, un celular se guarda en Supabase Auth como `<10 dígitos>@tel.coillector.app` (`lib/validation.ts`). La app muestra el celular, nunca ese correo técnico. Nombre, comercio y ubicación se piden en la primera solicitud.
+- **Ubicación:** autocompletado con [Photon](https://photon.komoot.io) (OpenStreetMap, sin clave) limitado al Valle de México, "usar mi ubicación" y pin arrastrable en un mapa Leaflet con mosaicos de OpenStreetMap. `solicitudes` y `users` guardan `lat`, `lng` y `referencias`; "Abrir en Maps" usa las coordenadas.
+- **Ruta sugerida:** se calcula en el teléfono (`lib/ruta.ts`): paradas dentro del radio elegido, agrupadas si están en el mismo punto, ordenadas por vecino más cercano y mejoradas con 2-opt. Distancia estimada en línea recta × 1.35. Google Maps recibe hasta 9 paradas sin clave de API.
+- **Keepalive:** `vercel.json` programa `/api/keepalive` una vez al día para que Supabase no pause el proyecto gratuito.
 - **Errores:** los errores de Postgres/RLS se traducen a mensajes en español (`lib/errors.ts`) y las mismas reglas de la BD se validan antes en el cliente (`lib/validation.ts`).
