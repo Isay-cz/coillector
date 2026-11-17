@@ -18,6 +18,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // Herramienta de Node (CommonJS) para grabar el video, fuera de la app.
+      "scripts/video/**",
     ],
   },
 ];
